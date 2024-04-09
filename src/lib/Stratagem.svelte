@@ -12,7 +12,8 @@
   import leftError from "../assets/arrow-left-error.png";
   import rightError from "../assets/arrow-right-error.png";
   import type { Direction } from "../types";
-  import { createEventDispatcher } from "svelte";
+  import { createEventDispatcher, onMount } from "svelte";
+  import { numberErrors, numberSuccess, streak } from "../stores";
 
   export let code: Direction[];
   export let icon: string;
@@ -45,21 +46,6 @@
     right: rightError,
   };
 
-  const keymaps: Record<string, Direction> = {
-    KeyA: "left",
-    KeyW: "up",
-    KeyS: "down",
-    KeyD: "right",
-    KeyH: "left",
-    KeyK: "up",
-    KeyJ: "down",
-    KeyL: "right",
-    ArrowLeft: "left",
-    ArrowUp: "up",
-    ArrowDown: "down",
-    ArrowRight: "right",
-  };
-
   function append(code: Direction[], current: Direction[], next: Direction): Direction[] {
     const invalid = current.find((dir, i) => code[i] !== dir) !== undefined;
     if (invalid) {
@@ -69,30 +55,6 @@
       return [];
     }
     return [...current, next];
-  }
-
-  function handleKeydown(
-    event: KeyboardEvent & {
-      currentTarget: EventTarget & Window;
-    }
-  ) {
-    const direction = keymaps[event.code];
-    if (direction === undefined) {
-      return;
-    }
-    currentInput = append(code, currentInput, direction);
-    if (currentInput.length === 0) {
-      error = true;
-      timeout = setTimeout(() => (error = false), 700);
-    } else {
-      if (timeout) clearTimeout(timeout);
-      error = false;
-    }
-
-    if (currentInput.length === code.length) {
-      console.log("hello");
-      succeed("succeed", { name });
-    }
   }
 
   function getUrl(
@@ -111,11 +73,43 @@
 
     return images[direction];
   }
+
+  function onDirection(
+    e: CustomEvent<{
+      direction: Direction;
+    }>
+  ) {
+    const direction = e.detail.direction;
+    const curInput = append(code, currentInput, direction);
+    currentInput = [...curInput];
+    console.log(code, curInput);
+    if (curInput.length === 0) {
+      numberErrors.update((x) => x + 1);
+      streak.set(0);
+      error = true;
+      timeout = setTimeout(() => (error = false), 700);
+    } else {
+      if (timeout) clearTimeout(timeout);
+      error = false;
+    }
+
+    if (curInput.length === code.length) {
+      numberSuccess.update((x) => x + 1);
+      streak.update((x) => x + 1);
+      succeed("succeed", { name });
+    }
+  }
+
+  onMount(() => {
+    document.addEventListener("direction", onDirection);
+
+    return () => {
+      document.removeEventListener("direction", onDirection as any);
+    };
+  });
 </script>
 
-<svelte:window on:keydown={handleKeydown} />
-
-<div class="flex flex-col justify-center items-center">
+<div class="flex flex-col items-center justify-center gap-3">
   <h2 class="text-xl">{name}</h2>
   <div class="flex justify-center"><img src={icon} {alt} /></div>
   <div class="flex flex-row">

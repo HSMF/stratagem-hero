@@ -4,8 +4,12 @@
   import stratagems from "./stratagems.json";
   import { contains } from "./utils";
   import logo from "/logo.png";
+  import KeyListener from "./lib/KeyListener.svelte";
+  import MobileControls from "./lib/MobileControls.svelte";
+  import { keysPressed, numberErrors } from "./stores";
+  import Streak from "./lib/Streak.svelte";
 
-  const previewLimit = 10;
+  const previewLimit = 5;
 
   function cast<T>(x: unknown): T {
     return x as T;
@@ -37,27 +41,62 @@
   let score = 0;
 
   function advance() {
-    nextStratagems = nextStratagems.slice(1);
+    let [_, ...newThing] = nextStratagems;
     score++;
-    if (nextStratagems.length <= 10) {
-      const seen = next.slice(0, previewLimit);
+    if (newThing.length <= 10) {
+      console.log("shuffling");
+      const seen = newThing.slice(1, previewLimit + 1);
       const fresh = shuffle(stratagems.filter((x) => !contains(seen, x)));
 
-      nextStratagems = seen.concat(fresh);
+      newThing = seen.concat(fresh);
     }
     unique = {};
+    nextStratagems = newThing;
+  }
+
+  $: accuracy = Math.round((($keysPressed - $numberErrors) / $keysPressed) * 1000) / 10;
+  function accuracyColor(accuracy: number): string {
+    if (Number.isNaN(accuracy)) {
+      return "";
+    }
+    if (accuracy >= 95) {
+      return "text-mauve";
+    }
+    if (accuracy >= 90) {
+      return "text-blue";
+    }
+    if (accuracy >= 85) {
+      return "text-green";
+    }
+    if (accuracy >= 80) {
+      return "text-yellow";
+    }
+    if (accuracy >= 70) {
+      return "text-peach";
+    }
+    if (accuracy >= 60) {
+      return "text-peach";
+    }
+    return "text-red";
   }
 </script>
 
 <main class="frappe bg-base text-text flex h-screen justify-center">
-  <div class="flex flex-col items-center p-2">
-    <img src={logo} alt="" />
+  <KeyListener />
+  <div class="flex flex-col items-center gap-2 p-2">
+    <img src={logo} alt="HELLDIVERS" />
     <div
-      class="bg-mantle border-subtext1 flex flex-col items-center gap-5 rounded-lg border px-3 py-6 shadow-lg"
+      class="bg-mantle border-subtext1 flex flex-col items-center gap-5 overflow-x-hidden rounded-lg border px-3 py-6 shadow-lg"
     >
-      <span class="text-xl">Score {score}</span>
+      <h2 class="text-xl">
+        Score {score} / {$keysPressed} /
+        <span class="text-red">{$numberErrors}</span>
+      </h2>
+      <h2 class={"text-xl font-bold drop-shadow-md " + accuracyColor(accuracy)}>
+        Accuracy {accuracy}
+      </h2>
       <div class="flex gap-2">
-        {#each next.slice(0, previewLimit) as preview}
+        {#each nextStratagems.slice(1, 1 + previewLimit) as preview}
           <img src={preview.path} alt={preview.alt} />
         {/each}
       </div>
@@ -70,6 +109,16 @@
           alt={head.alt}
         />
       {/key}
+
+      <Streak />
+
+      <span>
+        Official S.E.A.F. approved stratagem training terminal <span style="font-size: 6pt;">
+          not really
+        </span>
+      </span>
     </div>
+
+    <MobileControls />
   </div>
 </main>
