@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 devDependencies:
+  '@catppuccin/tailwindcss':
+    specifier: ^0.1.6
+    version: 0.1.6(tailwindcss@3.4.3)
   '@sveltejs/vite-plugin-svelte':
     specifier: ^3.0.2
     version: 3.0.2(svelte@4.2.12)(vite@5.2.8)
@@ -58,6 +61,14 @@ packages:
     dependencies:
       '@jridgewell/gen-mapping': 0.3.5
       '@jridgewell/trace-mapping': 0.3.25
+    dev: true
+
+  /@catppuccin/tailwindcss@0.1.6(tailwindcss@3.4.3):
+    resolution: {integrity: sha512-V+Y0AwZ5SSyvOVAcDl7Ng30xy+m82OKnEJ+9+kcZZ7lRyXuZrAb2GScdq9XR3v+ggt8qiZ/G4TvaC9cJ88AAXA==}
+    peerDependencies:
+      tailwindcss: '>=3.0.0'
+    dependencies:
+      tailwindcss: 3.4.3
     dev: true
 
   /@esbuild/aix-ppc64@0.20.2:
