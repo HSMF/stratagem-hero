@@ -11,9 +11,13 @@
   import downError from "../assets/arrow-down-error.png";
   import leftError from "../assets/arrow-left-error.png";
   import rightError from "../assets/arrow-right-error.png";
+  import type { Direction } from "../types"
 
-  type Direction = "up" | "down" | "left" | "right";
   export let code: Direction[];
+  export let icon: string;
+  export let alt: string;
+  export let name: string;
+  let timeout: number | undefined;
 
   let currentInput: Direction[] = [];
   let error = false;
@@ -75,9 +79,14 @@
     currentInput = append(code, currentInput, direction);
     if (currentInput.length === 0) {
       error = true;
-      setTimeout(() => (error = false), 700);
+      timeout = setTimeout(() => (error = false), 700);
     } else {
+      if (timeout) clearTimeout(timeout);
       error = false;
+    }
+
+    if (currentInput.length === code.length){
+      setTimeout(() => currentInput = [], 1000);
     }
   }
 
@@ -101,6 +110,12 @@
 
 <svelte:window on:keydown={handleKeydown} />
 
-{#each code as direction, i}
-  <img src={getUrl(direction, currentInput, i, error)} alt={direction} />
-{/each}
+<div>
+  <h2 class="text-xl">{name}</h2>
+  <img src={icon} {alt}>
+  <div class="flex flex-row">
+    {#each code as direction, i}
+      <img src={getUrl(direction, currentInput, i, error)} alt={direction} />
+    {/each}
+  </div>
+</div>
