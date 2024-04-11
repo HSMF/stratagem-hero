@@ -26,7 +26,6 @@
     if (direction === undefined) {
       return;
     }
-    keysPressed.update((x) => x + 1);
     document.dispatchEvent(new CustomEvent("direction", { detail: { direction } }));
   }
 </script>

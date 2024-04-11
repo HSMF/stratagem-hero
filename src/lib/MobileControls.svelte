@@ -12,7 +12,7 @@
   }
 </script>
 
-<div class="flex flex-col items-center justify-center">
+<div class="flex flex-col items-center justify-center md:hidden">
   <button class="" on:click={onClick("up")}><img class="w-10" src={up} alt="up" /></button>
   <div>
     <button class="" on:click={onClick("left")}><img class="w-10" src={left} alt="left" /></button>

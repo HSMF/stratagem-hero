@@ -104,7 +104,7 @@
     document.addEventListener("direction", onDirection);
 
     return () => {
-      document.removeEventListener("direction", onDirection as any);
+      document.removeEventListener("direction", onDirection);
     };
   });
 </script>
