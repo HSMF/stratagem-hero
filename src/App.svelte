@@ -6,7 +6,7 @@
   import logo from "/logo.png";
   import KeyListener from "./lib/KeyListener.svelte";
   import MobileControls from "./lib/MobileControls.svelte";
-  import { keysPressed, numberErrors } from "./stores";
+  import { bestStreak, keysPressed, numberErrors, streak } from "./stores";
   import Streak from "./lib/Streak.svelte";
 
   const previewLimit = 5;
@@ -80,30 +80,28 @@
     return "text-red";
   }
 
-  document.addEventListener('direction', e => {
-    console.log(e)
+  document.addEventListener("direction", (e) => {
+    console.log(e);
     keysPressed.update((x) => x + 1);
-  })
+  });
 </script>
 
-<svelte:body class="frappe bg-base" />
 
-<main class="text-text flex h-screen justify-center">
+<main class="flex h-screen justify-center text-text">
   <KeyListener />
   <div class="flex flex-col items-center gap-2 p-2">
     <img src={logo} alt="HELLDIVERS" />
     <div
-      class="bg-mantle border-subtext1 flex flex-col items-center gap-5 rounded-lg border px-3 py-6 shadow-lg"
+      class="flex flex-col items-center gap-5 rounded-lg border border-subtext1 bg-mantle px-3 py-6 shadow-lg"
     >
       <div>
-      <h2 class="text-xl">
-        Score {score} / {$keysPressed} /
-        <span class="text-red">{$numberErrors}</span>
-      </h2>
-      <h2 class={"text-xl font-bold drop-shadow-md " + accuracyColor(accuracy)}>
-        Accuracy {accuracy}
-      </h2>
-
+        <h2 class="text-xl">
+          Score {score} / {$keysPressed} /
+          <span class="text-red">{$numberErrors}</span>
+        </h2>
+        <h2 class={"text-xl font-bold drop-shadow-md " + accuracyColor(accuracy)}>
+          Accuracy {accuracy}
+        </h2>
       </div>
       <div class="flex gap-2">
         {#each nextStratagems.slice(1, 1 + previewLimit) as preview}

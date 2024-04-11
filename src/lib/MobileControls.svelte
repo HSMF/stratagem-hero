@@ -22,3 +22,9 @@
     </button>
   </div>
 </div>
+
+<style>
+  div {
+    touch-action: pan-y;
+  }
+</style>
