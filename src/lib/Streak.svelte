@@ -31,7 +31,7 @@
   }
 </script>
 
-<div class="flex gap-2 font-bold" style="color: #FEE800;" class:hidden={$streak < 3}>
+<div class="flex gap-2 font-bold" style="color: #FEE800;" class:opacity-0={$streak < 3}>
   <img class={"h-6 " + animation} {src} alt="skull" />
   x {$streak}
 </div>

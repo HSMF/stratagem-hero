@@ -8,6 +8,8 @@
   import MobileControls from "./lib/MobileControls.svelte";
   import { bestStreak, keysPressed, numberErrors, streak } from "./stores";
   import Streak from "./lib/Streak.svelte";
+  import TermsOfService from "./lib/TermsOfService.svelte";
+  import GithubMark from "./lib/GithubMark.svelte";
 
   const previewLimit = 5;
 
@@ -86,7 +88,6 @@
   });
 </script>
 
-
 <main class="flex h-screen justify-center text-text">
   <KeyListener />
   <div class="flex flex-col items-center gap-2 p-2">
@@ -121,7 +122,7 @@
       <Streak />
 
       <span>
-        Official S.E.A.F. approved stratagem training terminal <span style="font-size: 6pt;">
+        S.E.A.F. approved stratagem training terminal <span style="font-size: 6pt;">
           not really
         </span>
       </span>
@@ -130,3 +131,8 @@
     <MobileControls />
   </div>
 </main>
+
+<footer class="absolute bottom-0 flex w-full justify-center gap-2 py-4 text-subtext0">
+  <TermsOfService />
+  <GithubMark />
+</footer>
